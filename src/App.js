@@ -6,6 +6,7 @@ import {
   faAngleDown,
   faAngleUp,
 } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 function App() {
   const API_KEY = "e88d2805";
@@ -30,6 +31,7 @@ function App() {
       setListLength(result.totalResults);
       setPageNum(1);
       setListSearchTerm(searchTerm);
+      setResultsExpanded(true);
     } else {
       setMovieList([]);
       setListLength(0);
@@ -64,6 +66,7 @@ function App() {
 
     localStorage.setItem("nominations", JSON.stringify(nominations));
   }, [nominations]);
+
   return (
     <>
       {nominations.length === 5 && (
@@ -113,7 +116,17 @@ function App() {
         </section>
       )}
       <div className="App container p-6">
-        <h1 className="is-size-2 has-text-weight-bold mb-5">The Shoppies</h1>
+        <p className="is-size-2 has-text-weight-bold mb-5 is-flex is-align-items-center has-text-black">
+          The Shoppies
+          <a
+            href="https://github.com/Jon-Snow0/shopify-intern-challenge"
+            className="has-text-dark">
+            <span className="icon is-large mx-6">
+              <FontAwesomeIcon icon={faGithub} />
+            </span>
+          </a>
+        </p>
+
         {listSearchTerm === "" && (
           <div className="notification is-link has-text-centered">
             Search for movies to nominate them.
@@ -169,10 +182,10 @@ function App() {
                 {resultsExpanded && (
                   <div className="card-content">
                     <ul>
-                      {movieList.map((movie) => (
+                      {movieList.map((movie, index) => (
                         <li
                           className="is-flex-tablet is-block-mobile is-align-items-center has-text-centered mb-2 is-flex-wrap-nowrap"
-                          key={movie.imdbID}>
+                          key={movie.imdbID + index}>
                           <figure className="image">
                             {(movie.Poster === "N/A" && (
                               <img
@@ -231,7 +244,7 @@ function App() {
                   </div>
                 )}
                 {loading && (
-                  <div className="loader" style={{ margin: "auto" }}></div>
+                  <div className="loader mb-3" style={{ margin: "auto" }}></div>
                 )}
               </div>
             </div>
@@ -248,10 +261,10 @@ function App() {
                   {nominations.length === 0 && (
                     <p className="has-text-centered">Nothing here yet</p>
                   )}
-                  {nominations.map((movie) => (
+                  {nominations.map((movie, index) => (
                     <li
                       className="is-flex-tablet is-block-mobile is-align-items-center has-text-centered mb-2 is-flex-wrap-nowrap"
-                      key={movie.imdbID}>
+                      key={movie.imdbID + index}>
                       <figure className="image">
                         {(movie.Poster === "N/A" && (
                           <img
