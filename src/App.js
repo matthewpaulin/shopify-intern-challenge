@@ -6,45 +6,50 @@ import {
   faAngleDown,
   faAngleUp,
 } from "@fortawesome/free-solid-svg-icons";
+
 function App() {
   const API_KEY = "e88d2805";
   const [searchTerm, setSearchTerm] = useState("");
+  const [listSearchTerm, setListSearchTerm] = useState("");
   const [movieList, setMovieList] = useState([]);
   const [listLength, setListLength] = useState(0);
   const [pageNum, setPageNum] = useState(0);
   const [nominations, setNominations] = useState([]);
   const [resultsExpanded, setResultsExpanded] = useState(true);
-  // const [warningVisibility, setWarningVisibility] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
+    setLoading(true);
     const response = await fetch(
       `http://www.omdbapi.com/?s=${searchTerm}&type=movie&apikey=${API_KEY}`
     );
     const result = await response.json();
-    console.log(result);
     if (result.Response === "True") {
       setMovieList(result.Search);
       setListLength(result.totalResults);
       setPageNum(1);
+      setListSearchTerm(searchTerm);
     } else {
       setMovieList([]);
       setListLength(0);
     }
+    setLoading(false);
   };
 
   const handleSearchMore = async () => {
+    setLoading(true);
     const response = await fetch(
-      `http://www.omdbapi.com/?s=${searchTerm}&type=movie&page=${
+      `http://www.omdbapi.com/?s=${listSearchTerm}&type=movie&page=${
         pageNum + 1
       }&apikey=${API_KEY}`
     );
     const result = await response.json();
-    console.log(result);
     if (result.Response === "True") {
       setMovieList([...movieList, ...result.Search]);
       setListLength(result.totalResults);
       setPageNum(pageNum + 1);
     }
+    setLoading(false);
   };
 
   const handleKeyDown = (e) => {
@@ -55,7 +60,7 @@ function App() {
   return (
     <div className="App container p-6">
       <h1 className="is-size-2 has-text-weight-bold mb-5">The Shoppies</h1>
-      {nominations.length === 0 && (
+      {listSearchTerm === "" && (
         <div className="notification is-link has-text-centered">
           Search for movies to nominate them.
         </div>
@@ -90,14 +95,14 @@ function App() {
             </div>
           </div>
         </div>
-        {movieList && movieList.length > 0 && (
+        {((movieList && movieList.length > 0) || loading) && (
           <div className="column is-full-tablet-only mb-3">
             <div className="card">
               <header className="card-header">
                 <p className="is-size-5 has-text-weight-semibold card-header-title">
-                  Results for "{searchTerm}"
+                  Results for "{listSearchTerm}"
                 </p>
-                <a
+                <span
                   className="card-header-icon"
                   onClick={() => setResultsExpanded(!resultsExpanded)}>
                   <span className="icon">
@@ -105,7 +110,7 @@ function App() {
                       <FontAwesomeIcon icon={faAngleUp} />
                     )) || <FontAwesomeIcon icon={faAngleDown} />}
                   </span>
-                </a>
+                </span>
               </header>
               {resultsExpanded && (
                 <div className="card-content">
@@ -124,6 +129,7 @@ function App() {
                                 minWidth: "5.4em",
                                 margin: "auto",
                               }}
+                              alt={`no poster found`}
                             />
                           )) || (
                             <img
@@ -134,6 +140,7 @@ function App() {
                                 minWidth: "5.4em",
                                 margin: "auto",
                               }}
+                              alt={`${movie.Title} poster`}
                             />
                           )}
                         </figure>
@@ -149,9 +156,6 @@ function App() {
                           <button
                             className="button is-link"
                             onClick={() => {
-                              // if (nominations.length >= 5) {
-                              //   setWarningVisibility(true);
-                              // } else
                               setNominations([...nominations, movie]);
                             }}>
                             Nominate
@@ -171,6 +175,9 @@ function App() {
                     </div>
                   )}
                 </div>
+              )}
+              {loading && (
+                <div className="loader" style={{ margin: "auto" }}></div>
               )}
             </div>
           </div>
@@ -192,16 +199,29 @@ function App() {
                     className="is-flex-tablet is-block-mobile is-align-items-center has-text-centered mb-2 is-flex-wrap-nowrap"
                     key={movie.imdbID}>
                     <figure className="image">
-                      {/* <img src="https://bulma.io/images/placeholders/64x64.png" /> */}
-                      <img
-                        src={movie.Poster}
-                        style={{
-                          width: "5.4em",
-                          height: "8em",
-                          minWidth: "5.4em",
-                          margin: "auto",
-                        }}
-                      />
+                      {(movie.Poster === "N/A" && (
+                        <img
+                          src="poster.png"
+                          style={{
+                            width: "5.4em",
+                            height: "8em",
+                            minWidth: "5.4em",
+                            margin: "auto",
+                          }}
+                          alt={`no poster found`}
+                        />
+                      )) || (
+                        <img
+                          src={movie.Poster}
+                          style={{
+                            width: "5.4em",
+                            height: "8em",
+                            minWidth: "5.4em",
+                            margin: "auto",
+                          }}
+                          alt={`${movie.Title} poster`}
+                        />
+                      )}
                     </figure>
                     <p className="px-3 is-size-6 has-text-weight-medium">
                       {movie.Title} ({movie.Year})
