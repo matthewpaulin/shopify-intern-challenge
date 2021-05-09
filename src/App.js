@@ -22,7 +22,7 @@ function App() {
   const handleSearch = async () => {
     setLoading(true);
     const response = await fetch(
-      `http://www.omdbapi.com/?s=${searchTerm}&type=movie&apikey=${API_KEY}`
+      `https://www.omdbapi.com/?s=${searchTerm}&type=movie&apikey=${API_KEY}`
     );
     const result = await response.json();
     if (result.Response === "True") {
@@ -40,7 +40,7 @@ function App() {
   const handleSearchMore = async () => {
     setLoading(true);
     const response = await fetch(
-      `http://www.omdbapi.com/?s=${listSearchTerm}&type=movie&page=${
+      `https://www.omdbapi.com/?s=${listSearchTerm}&type=movie&page=${
         pageNum + 1
       }&apikey=${API_KEY}`
     );
