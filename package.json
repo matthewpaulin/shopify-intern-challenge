@@ -1,5 +1,5 @@
 {
-  "name": "spotify-intern-challenge",
+  "name": "shopify-intern-challenge",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -9,6 +9,8 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "bulma": "^0.9.2",
+    "express": "^4.17.1",
+    "path": "^0.12.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
@@ -37,5 +39,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jon-Snow0/shopify-intern-challenge.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jon-Snow0/shopify-intern-challenge/issues"
+  },
+  "homepage": "https://github.com/Jon-Snow0/shopify-intern-challenge#readme"
 }
